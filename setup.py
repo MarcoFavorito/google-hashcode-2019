@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 PACKAGE_NAME="hashcode19"
 
@@ -22,7 +22,7 @@ setup(
     author=about['__author__'],
     author_email=about["__email__"],
     long_description=readme,
-    packages=[PACKAGE_NAME],
+    packages=find_packages(),
     install_requires=[],
     tests_require=[],
     entry_points={
