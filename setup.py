@@ -4,7 +4,7 @@ import os
 
 from setuptools import setup, find_packages
 
-PACKAGE_NAME="hashcode19"
+PACKAGE_NAME = "hashcode19"
 
 here = os.path.abspath(os.path.dirname(__file__))
 about = {}

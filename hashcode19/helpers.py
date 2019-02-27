@@ -27,7 +27,7 @@ class Input(object):
         pizza = [list(next(sys.stdin).strip()) for _ in range(R)]
 
         logger.debug("{}, {}, {}, {}".format(R, C, L, H))
-        logger.debug("Pizza: {}".format(pprint.pformat(pizza)))
+        logger.debug("Pizza: \n{}".format(pprint.pformat(pizza)))
 
         return Input(R, C, L, H, pizza)
 
