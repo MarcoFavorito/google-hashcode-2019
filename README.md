@@ -22,4 +22,4 @@ Repository containing our solutions for Google Hash Code 2019.
 
 - Attila Bagoly <attila.bagoly@fetch.ai>
 - Marco Favorito <marco.favorito@gmail.com>
-- Julia Gomes <julia@wayve.ai>
+- Julia Gomes <julia.mgomes170@gmail.com>
