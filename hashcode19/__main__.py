@@ -6,13 +6,14 @@ import inspect
 import logging
 import os
 import importlib
+import re
 
 from hashcode19.helpers import Input, Output
 
 logger = logging.getLogger(__name__)
 
 PACKAGE_DIRECTORY = os.path.dirname(inspect.getfile(inspect.currentframe()))
-ALGORITHMS = [s.replace(".py", "") for s in os.listdir(PACKAGE_DIRECTORY + "/sol") if s != "__init__.py"]
+ALGORITHMS = [s.replace(".py", "") for s in os.listdir(PACKAGE_DIRECTORY + "/sol") if re.match("[^_].+.py", s)]
 
 parser = argparse.ArgumentParser("hashcode19", description="CLI util for Google Hash Code 2019. "
                                                            "It assumes the input provided in stdin.")

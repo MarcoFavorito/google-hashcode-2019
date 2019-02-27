@@ -24,7 +24,7 @@ class Input(object):
         line = next(sys.stdin)
         R, C, L, H = map(int, line.strip().split(" "))
 
-        pizza = [list(next(sys.stdin)) for r in range(R)]
+        pizza = [list(next(sys.stdin).strip()) for _ in range(R)]
 
         logger.debug("{}, {}, {}, {}".format(R, C, L, H))
         logger.debug("Pizza: {}".format(pprint.pformat(pizza)))
