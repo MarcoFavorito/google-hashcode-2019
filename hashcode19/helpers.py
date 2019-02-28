@@ -28,7 +28,8 @@ class Picture(object):
 class Slide(object):
 
     def __init__(self, pictures: List[Picture]):
-        assert len(pictures) == 1 or len(pictures) == 2 and pictures[0].type_ == PictureType.V and pictures[1].type_ == PictureType.V
+        assert len(pictures) == 1 or \
+               (len(pictures) == 2 and pictures[0].type_ == PictureType.V and pictures[1].type_ == PictureType.V)
         self.pictures = pictures
 
     def is_horiziontal(self) -> bool:
