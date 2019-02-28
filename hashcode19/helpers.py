@@ -35,6 +35,10 @@ class Slide(object):
     def is_horiziontal(self) -> bool:
         return len(self.pictures) == 1
 
+    @property
+    def tags(self):
+        return set(t for p in self.pictures for t in p.tags)
+
 
 class Input(object):
 
@@ -79,3 +83,13 @@ class Output(object):
             else:
                 print("{} {}".format(s.pictures[0].id_, s.pictures[1].id_))
 
+
+def score_transition(s1: Slide, s2: Slide) -> int:
+    common = s1.pictures
+    return 0
+
+
+def score(output: Output) -> int:
+    # for s in output.slides
+
+    return 0
