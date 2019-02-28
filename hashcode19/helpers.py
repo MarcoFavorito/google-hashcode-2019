@@ -75,6 +75,7 @@ class Output(object):
         assert len(slides) == N
 
     def to_stdout(self) -> None:
+        logger.debug("Printing to stdout...")
         print(self.N)
         for s in self.slides:
             if len(s.pictures) == 1:

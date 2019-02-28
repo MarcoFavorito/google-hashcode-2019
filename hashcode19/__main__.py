@@ -8,7 +8,7 @@ import os
 import importlib
 import re
 
-from hashcode19.helpers import Input, Output
+from hashcode19.helpers import Input, Output, score
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +28,7 @@ def main():
     logger.debug("Chosen algorithm: {}".format(args.alg))
     input_ = Input.parse_from_stdin()  # type: Input
     output = solution.main(input_)  # type: Output
+    logger.debug("Score of the solution: {}".format(score(output)))
     output.to_stdout()
 
 
