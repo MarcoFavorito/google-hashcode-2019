@@ -16,9 +16,24 @@ class PictureType(Enum):
 
 class Picture(object):
 
-    def __init__(self, type_: PictureType, tags: Set[str]):
+    def __init__(self, id_: int, type_: PictureType, tags: Set[str]):
+        self.id_ = id_
         self.type_ = type_
         self.tags = tags
+
+    def __hash__(self):
+        return self.id_
+
+
+class Slide(object):
+
+    def __init__(self, pictures: List[Picture]):
+        assert len(pictures) == 1 and pictures[0].type_ == PictureType.H\
+               or len(pictures) == 2 and pictures[0].type_ == PictureType.V and pictures[1].type_ == PictureType.V
+        self.pictures = pictures
+
+    def is_horiziontal(self) -> bool:
+        return len(self.pictures) == 1
 
 
 class Input(object):
@@ -35,34 +50,32 @@ class Input(object):
         N = int(line.strip())
 
         pictures = []
-        for _ in range(N):
+        for id_ in range(N):
             tokens = next(sys.stdin).strip().split(" ")
 
             picture_type = PictureType(tokens[0])
             tags = set(tokens[2:])
 
-            picture = Picture(picture_type, tags)
+            picture = Picture(id_, picture_type, tags)
             pictures.append(picture)
 
         assert len(pictures) == N
+        logger.debug("Parsed input: {} pictures.".format(N))
         return Input(N, pictures)
 
 
 class Output(object):
 
-    class Slice(object):
-
-        def __init__(self, begin: Tuple[int, int], end: Tuple[int, int]):
-            self.begin = begin
-            self.end = end
-
-    def __init__(self, N: int, slices: List[Slice]):
+    def __init__(self, N: int, slides: List[Slide]):
         self.N = N
-        self.slices = slices
-        assert len(slices) == N
+        self.slides = slides
+        assert len(slides) == N
 
     def to_stdout(self) -> None:
         print(self.N)
-        for s in self.slices:
-            print("{} {} {} {}".format(s.begin[0], s.begin[1], s.end[0], s.end[1]))
+        for s in self.slides:
+            if len(s.pictures) == 1:
+                print("{}".format(s.pictures[0].id_))
+            else:
+                print("{} {}".format(s.pictures[0].id_, s.pictures[1].id_))
 
