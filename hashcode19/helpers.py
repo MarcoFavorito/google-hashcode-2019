@@ -28,7 +28,7 @@ class Picture(object):
 class Slide(object):
 
     def __init__(self, pictures: List[Picture]):
-        assert len(pictures) == 1 or \
+        assert len(pictures) == 1 and pictures[0].type_ == PictureType.H or \
                (len(pictures) == 2 and pictures[0].type_ == PictureType.V and pictures[1].type_ == PictureType.V)
         self.pictures = pictures
 
