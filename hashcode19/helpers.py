@@ -3,33 +3,49 @@ import sys
 
 import logging
 import pprint
-from typing import List, Tuple
+from enum import Enum
+from typing import List, Tuple, Set
 
 logger = logging.getLogger(__name__)
 
 
+class PictureType(Enum):
+    H = "H"
+    V = "V"
+
+
+class Picture(object):
+
+    def __init__(self, type_: PictureType, tags: Set[str]):
+        self.type_ = type_
+        self.tags = tags
+
+
 class Input(object):
 
-    def __init__(self, R, C, L, H, pizza: List[List[str]]):
-        self.R = R
-        self.C = C
-        self.L = L
-        self.H = H
-        self.pizza = pizza
+    def __init__(self, N, pictures: List[Picture]):
+        self.N = N
+        self.pictures = pictures
 
     @classmethod
     def parse_from_stdin(cls):
         """Returns an Input instance"""
 
         line = next(sys.stdin)
-        R, C, L, H = map(int, line.strip().split(" "))
+        N = int(line.strip())
 
-        pizza = [list(next(sys.stdin).strip()) for _ in range(R)]
+        pictures = []
+        for _ in range(N):
+            tokens = next(sys.stdin).strip().split(" ")
 
-        logger.debug("{}, {}, {}, {}".format(R, C, L, H))
-        logger.debug("Pizza: \n{}".format(pprint.pformat(pizza)))
+            picture_type = PictureType(tokens[0])
+            tags = set(tokens[2:])
 
-        return Input(R, C, L, H, pizza)
+            picture = Picture(picture_type, tags)
+            pictures.append(picture)
+
+        assert len(pictures) == N
+        return Input(N, pictures)
 
 
 class Output(object):
