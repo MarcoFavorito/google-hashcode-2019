@@ -14,4 +14,4 @@ do
 done
 
 echo "$(date)" >>  SUBMISSION
-echo "Algorithm used for the submission: ${alg)" >> SUBMISSION
+echo "Algorithm used for the submission: ${ALG}" >> SUBMISSION
