@@ -28,15 +28,14 @@ class Picture(object):
 class Slide(object):
 
     def __init__(self, pictures: List[Picture]):
-        assert len(pictures) == 1 and pictures[0].type_ == PictureType.H\
-               or len(pictures) == 2 and pictures[0].type_ == PictureType.V and pictures[1].type_ == PictureType.V
+        assert len(pictures) == 1 or len(pictures) == 2 and pictures[0].type_ == PictureType.V and pictures[1].type_ == PictureType.V
         self.pictures = pictures
 
     def is_horiziontal(self) -> bool:
         return len(self.pictures) == 1
 
     @property
-    def tags(self):
+    def tags(self) -> Set[str]:
         return set(t for p in self.pictures for t in p.tags)
 
 
@@ -85,11 +84,17 @@ class Output(object):
 
 
 def score_transition(s1: Slide, s2: Slide) -> int:
-    common = s1.pictures
-    return 0
+    common = len(s1.tags.intersection(s2.tags))
+    s1_minus_s2 = len(s1.tags.difference(s2.tags))
+    s2_minus_s1 = len(s2.tags.difference(s1.tags))
+    return min(common, s1_minus_s2, s2_minus_s1)
 
 
 def score(output: Output) -> int:
-    # for s in output.slides
+    result = 0
+    for i in range(len(output.slides) - 1):
+        s1 = output.slides[i]
+        s2 = output.slides[i+1]
+        result += score_transition(s1, s2)
 
-    return 0
+    return result
