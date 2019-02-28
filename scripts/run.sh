@@ -11,5 +11,7 @@ do
         exit 1;
     fi
 
-
 done
+
+echo "$(date)" >>  SUBMISSION
+echo "Algorithm used for the submission: ${alg)" >> SUBMISSION
