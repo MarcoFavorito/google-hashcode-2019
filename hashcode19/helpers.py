@@ -69,14 +69,12 @@ class Input(object):
 
 class Output(object):
 
-    def __init__(self, N: int, slides: List[Slide]):
-        self.N = N
+    def __init__(self, slides: List[Slide]):
         self.slides = slides
-        assert len(slides) == N
 
     def to_stdout(self) -> None:
         logger.debug("Printing to stdout...")
-        print(self.N)
+        print(len(self.slides))
         for s in self.slides:
             if len(s.pictures) == 1:
                 print("{}".format(s.pictures[0].id_))
