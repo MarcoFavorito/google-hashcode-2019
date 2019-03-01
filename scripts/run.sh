@@ -19,13 +19,13 @@ echo "Algorithm used for the submission: ${ALG}" >> SUBMISSION
 echo "Zipping the solution..."
 ./scripts/zipper.sh
 
-echo "The scores are:" >> SUBMISSION
+echo "The scores are:" >&1 | tee -a SUBMISSION;
 total_score=0;
 for f in $(find ./data/*.in  -printf "%f\n" | cut -d'.' -f1);
 do
     partial_score=$(./scripts/scorer --in data/$f.in --solution out/$f.out)
     total_score=$(echo "$total_score + $partial_score" | bc)
-    echo "- $f:  $partial_score" >> SUBMISSION;
+    echo "- $f: $partial_score" >&1 | tee -a SUBMISSION
 done
 
 echo "The total score of the submission is: ${total_score}" >&1 | tee -a SUBMISSION
