@@ -18,6 +18,24 @@ Some info about the data:
 | e | 80000 |      0 | 80000 |
 ```
 
+### #distinct tags 
+
+    cat a_example.in | tail -n +2 | cut -d' ' -f3- |  tr " " "\n" | sort -u | wc -l
+
+
+```
+|   | #tags  |
+|---|--------|
+| a |      4 |
+| b | 840000 |
+| c |   2166 |
+| d |    220 |
+| e |    500 |
+```
+
+
+ 
+
 ### #pics by #tags
 
     cat a_example.in | cut -d' ' -f2 | tail -n +2 | sort | uniq -c | sed -e "s/^ *//" | awk '{print $2 " " $1}' | sort -n -k 1
