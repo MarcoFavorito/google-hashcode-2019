@@ -19,6 +19,8 @@ parser = argparse.ArgumentParser("hashcode19", description="CLI util for Google 
                                                            "It assumes the input provided in stdin.")
 
 parser.add_argument("--alg", required=True, choices=ALGORITHMS, help="The algorithm to use for computing the solution.")
+parser.add_argument("--in",  dest="in_file",  type=str, default=None, help="provide an input data file.")
+parser.add_argument("--out", dest="out_file", type=str, default=None, help="provide an output data file.")
 
 args = parser.parse_args()
 solution = importlib.import_module('hashcode19.sol.{}'.format(args.alg))
@@ -26,10 +28,10 @@ solution = importlib.import_module('hashcode19.sol.{}'.format(args.alg))
 
 def main():
     logger.debug("Chosen algorithm: {}".format(args.alg))
-    input_ = Input.parse_from_stdin()  # type: Input
+    input_ = Input.read(args.in_file)  # type: Input
     output = solution.main(input_)  # type: Output
     logger.debug("Score of the solution: {}".format(score(output)))
-    output.to_stdout()
+    output.write(args.out_file)
 
 
 if __name__ == '__main__':
