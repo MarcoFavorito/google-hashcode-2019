@@ -26,7 +26,7 @@ Some info about the data:
 ```
 |   | #tags  |
 |---|--------|
-| a |      4 |
+| a |      6 |
 | b | 840000 |
 | c |   2166 |
 | d |    220 |
@@ -38,9 +38,18 @@ Some info about the data:
 
 ### #pics by #tags
 
+How many pictures have a given number of tags.
+
     cat a_example.in | cut -d' ' -f2 | tail -n +2 | sort | uniq -c | sed -e "s/^ *//" | awk '{print $2 " " $1}' | sort -n -k 1
 
-Here the list for every file a,b,c,d,e:
+E.g. for file a:
+
+    2 3
+    3 1
+
+means that 3 pictures have 2 tags, and 1 picture has 3 tags.
+
+Here the same lists for every file a,b,c,d,e:
 
     2 3   9  4002   4   2   1    1    8    6    
     3 1  12 11840   5  90   2  241    9  358  
@@ -65,4 +74,40 @@ Here the list for every file a,b,c,d,e:
                                      28 3422
                                      29 1721
       
-      
+ 
+ ### tags occurrence
+
+ 
+    cat a_example.in | tail -n +2 | cut -d' ' -f3- |  tr " " "\n" | sort | uniq -c |  awk '{ print $2 " " $1 }'
+
+List of tags and their occurrence count:
+    
+    beach 1
+    cat 2
+    garden 2
+    selfie 2
+    smile 1
+    sun 1
+
+### average and variance of tag occurrence
+
+for the average:
+
+    cat a_example.in | tail -n +2 | cut -d' ' -f3- |  tr " " "\n" | sort | uniq -c |  awk '{ print $1 }' | awk '{s+=$1}END{print s/NR}'
+
+for the variance:
+
+     cat a_example.in | tail -n +2 | cut -d' ' -f3- |  tr " " "\n" | sort | uniq -c |  awk '{ print $1 }' \
+       | awk '{total+=$1 ; sq+=$1*$1 ; }END{ print sq/NR-(total/NR)**2 ; }'
+
+A tag occur on average in # pictures (variance provided as well):
+    
+```
+|   | avg     |  var            |
+|---|---------|-----------------|
+| a |    1.5  |     0.25        |
+| b | 1.71429 |     0.204082    |
+| c | 4.37488 |    33.8124      |
+| d | 4101.16 |     3.89164e+07 |
+| e | 3055.96 |  2801.39        |
+```
