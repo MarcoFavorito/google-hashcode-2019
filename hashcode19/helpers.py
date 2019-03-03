@@ -19,7 +19,9 @@ class Picture(object):
     def __init__(self, id_: int, type_: PictureType, tags: Set[str]):
         self.id_ = id_
         self.type_ = type_
-        self.tags = tags
+        self.tags_str = tags
+        # to be set later
+        self.tags_idx = None
 
     def __hash__(self):
         return self.id_
@@ -28,6 +30,10 @@ class Picture(object):
     def type(self) -> PictureType:
         return self.type_
 
+    @property
+    def tags(self) -> Set[int]:
+        return self.tags_idx
+
 
 class Slide(object):
 
@@ -35,13 +41,14 @@ class Slide(object):
         assert len(pictures) == 1 and pictures[0].type_ == PictureType.H or \
                (len(pictures) == 2 and pictures[0].type_ == PictureType.V and pictures[1].type_ == PictureType.V)
         self.pictures = pictures
+        self._tags = set(t for p in self.pictures for t in p.tags)   # type: Set[int]
 
     def is_horiziontal(self) -> bool:
         return len(self.pictures) == 1
 
     @property
-    def tags(self) -> Set[str]:
-        return set(t for p in self.pictures for t in p.tags)
+    def tags(self) -> Set[int]:
+        return self._tags
 
 
 class Input(object):
@@ -55,9 +62,20 @@ class Input(object):
         self._id_to_pic = dict(enumerate(self.pictures))
         self.type_to_pics = {PictureType.H: [], PictureType.V: []}
         self.numtag_to_pics = defaultdict(lambda: [])
+
+        self.tag_2_idx = {}
+        self.idx_2_tag = {}
+
         for i, p in enumerate(self.pictures):
             self.type_to_pics[p.type_].append(p)
-            self.numtag_to_pics[len(p.tags)].append(p)
+            self.numtag_to_pics[len(p.tags_str)].append(p)
+
+            for t in p.tags_str:
+                idx = self.tag_2_idx.get(t, len(self.tag_2_idx))
+                self.idx_2_tag[idx] = t
+                self.tag_2_idx[t] = idx
+
+            p.tags_idx = set(map(lambda t: self.tag_2_idx[t], p.tags_str))
 
     @classmethod
     def read(cls, filename=None):
@@ -75,8 +93,8 @@ class Input(object):
             tokens = next(lines).strip().split(" ")
 
             picture_type = PictureType(tokens[0])
-            tags = set(tokens[2:])
 
+            tags = tokens[2:]
             picture = Picture(id_, picture_type, tags)
             pictures.append(picture)
 

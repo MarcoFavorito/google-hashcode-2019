@@ -7,13 +7,17 @@ Recall that, the score of a slide transition from s1 to s2 is given by:
 `min( | s1 \ s1 |, | s1 & s2 |, | s2 \ s1 | )`
 
 Notice, we use s1 to denote interchangeably the slide and the set of tags 
-in that slide.
+in that slide. Also, we denote with `//` integer division (`/` and then floor).
 
 ### Observations
 
 Given two slides s1 and s2, whose cardinality of the tag set is N.
 
-The worst case is when the set are the same. 
+#### Worst case
+
+The worst case is when:
+ 
+- the sets of tags are the same. 
 
 ```
 
@@ -22,6 +26,18 @@ The worst case is when the set are the same.
     0             N             0
 
 ```
+
+- the sets of tags are completely different (empty intersection):
+
+```
+
+|s1 / s2|     |s1 & s2|     |s2 / s1|
+
+    N             0             M
+
+```
+
+#### Best case
 
 The best case is when we have (assume N even for simplicity):
 
@@ -33,9 +49,11 @@ The best case is when we have (assume N even for simplicity):
 
 ```
 
+That is, every tag contributes in the same way to the score.
+
 Now assume we remove an element _e_ from s2.
 
-- if _e_ was in s1:
+- if _e_ was in s1, the score decreases:
 
 ```
 
@@ -44,7 +62,7 @@ Now assume we remove an element _e_ from s2.
  N/2 + 1       N/2 - 1         N/2
 
 ```
-- if _e_ was not in s2:
+- if _e_ was not in s2, the score decreases:
 
 ```
 
@@ -54,7 +72,53 @@ Now assume we remove an element _e_ from s2.
 
 ```
 
-In both cases, the score decreases.
+In both cases, the score decreases (only if from the best case).
+
+If instead we add an element _e_ to s2:
+
+- if _e_ is also in s1, the score decreases:
+
+```
+
+|s1 / s2|     |s1 & s2|     |s2 / s1|
+
+ N/2 - 1       N/2 + 1         N/2
+
+```
+- if _e_ is not in s1, the score is the same:
+
+```
+
+|s1 / s2|     |s1 & s2|     |s2 / s1|
+
+   N/2           N/2         N/2 + 1
+
+```
+
+In one case, the score decreases, in the other one the score remains the same. 
+Remember that we are talking about local variations from the best case.
+
+---
+
+Given a slide s1, how to choose the next slide?
+
+- no completely disjoint nor a subset of s1
+- given `|s1|=N` and `|s2|=M`:
+    - if `N > M`: the score is in the range `[0, M//2]`
+    - if `N = M`: the score is in the range `[0, N//2]`
+    - if `N < M`: the score is in the range `[0, N//2]`
+    
+    in other words, the score is in the range `[0, min(N, M)//2]`
+    
+    Which implies that, in order to maximize the range, from the slide s1 
+    we should look at slides with a greater or equal 
+    number of tags, that is `N <= M`.
+    
+    This **does not imply** that we improve the score.
+
+## Summary
+
+- s1 == s2 -> worst case
 
 ## Solutions
 

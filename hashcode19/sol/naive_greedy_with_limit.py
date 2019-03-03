@@ -15,7 +15,7 @@ def main(i: Input) -> Output:
     vp = i.type_to_pics[PictureType.V]
     slides = slides + [Slide([vp[i], vp[i+1]]) for i in range(0, len(vp)//2, 2)]
 
-    slides = sorted(slides, key=lambda x: len(x.tags), reverse=True)
+    slides = sorted(slides, key=lambda x: len(x.tags), reverse=False)
 
     cur_slide, slides = slides[0], slides[1:]
     best_slide = None
