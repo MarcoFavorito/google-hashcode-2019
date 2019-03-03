@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import logging
 from enum import Enum
-from typing import List, Set
+from typing import List, Set, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +25,9 @@ class Picture(object):
 
     def __hash__(self):
         return self.id_
+
+    def __eq__(self, other):
+        return type(self) == type(other) and hash(self) == hash(other)
 
     @property
     def type(self) -> PictureType:
@@ -59,23 +62,31 @@ class Input(object):
         self._build_indexes()
 
     def _build_indexes(self):
+        logger.debug("Start building indexes...")
         self._id_to_pic = dict(enumerate(self.pictures))
-        self.type_to_pics = {PictureType.H: [], PictureType.V: []}
-        self.numtag_to_pics = defaultdict(lambda: [])
+        self.type_to_pics = {PictureType.H: [], PictureType.V: []}  # type: Dict[PictureType, List[Picture]]
+        self.numtag_to_pics = defaultdict(lambda: [])  # type: Dict[int, List[Picture]]
 
-        self.tag_2_idx = {}
-        self.idx_2_tag = {}
+        self.tag_to_idx = {}  # type: Dict[str, int]
+        self.idx_to_tag = {}  # type: Dict[int, str]
+
+        self.tag_to_pics = defaultdict(lambda: set())  # type: Dict[int, Set[Picture]]
+        self.tag_to_count = defaultdict(lambda: 0)  # type: Dict[int, int]
 
         for i, p in enumerate(self.pictures):
             self.type_to_pics[p.type_].append(p)
             self.numtag_to_pics[len(p.tags_str)].append(p)
 
             for t in p.tags_str:
-                idx = self.tag_2_idx.get(t, len(self.tag_2_idx))
-                self.idx_2_tag[idx] = t
-                self.tag_2_idx[t] = idx
+                idx = self.tag_to_idx.get(t, len(self.tag_to_idx))
+                self.idx_to_tag[idx] = t
+                self.tag_to_idx[t] = idx
+                self.tag_to_pics[idx].add(p)
+                self.tag_to_count[idx] += 1
 
-            p.tags_idx = set(map(lambda t: self.tag_2_idx[t], p.tags_str))
+            p.tags_idx = set(map(lambda t: self.tag_to_idx[t], p.tags_str))
+
+        logger.debug("Done!")
 
     @classmethod
     def read(cls, filename=None):
@@ -142,11 +153,11 @@ class Output(object):
         return Output(slideshow)
 
 
-def score_tag_transition(tags1: Set[str], tags2: Set[str]):
+def score_tag_transition(tags1: Set[int], tags2: Set[int]):
     common = len(tags1.intersection(tags2))
-    s1_minus_s2 = len(tags1.difference(tags2))
-    s2_minus_s1 = len(tags2.difference(tags1))
-    return min(common, s1_minus_s2, s2_minus_s1)
+    s1_minus_s2 = len(tags1) - common
+    s2_minus_s1 = len(tags2) - common
+    return min(s1_minus_s2, common, s2_minus_s1)
 
 
 def score_transition(s1: Slide, s2: Slide) -> int:

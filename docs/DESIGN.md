@@ -9,6 +9,12 @@ Recall that, the score of a slide transition from s1 to s2 is given by:
 Notice, we use s1 to denote interchangeably the slide and the set of tags 
 in that slide. Also, we denote with `//` integer division (`/` and then floor).
 
+The main questions to answer are:
+
+- given the current slide, how to find the best next slide
+- how to pack vertical pictures in a good way.
+
+
 ### Observations
 
 Given two slides s1 and s2, whose cardinality of the tag set is N.
@@ -114,11 +120,11 @@ Given a slide s1, how to choose the next slide?
     we should look at slides with a greater or equal 
     number of tags, that is `N <= M`.
     
-    This **does not imply** that we improve the score.
+    Nevertheless, this **does not imply** that we improve the score if `N <= M`.
 
 ## Summary
 
-- s1 == s2 -> worst case
+- s1 == s2 | s1 & s2 == {} -> worst case
 
 ## Solutions
 

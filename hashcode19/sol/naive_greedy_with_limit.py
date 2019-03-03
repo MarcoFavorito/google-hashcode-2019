@@ -25,7 +25,8 @@ def main(i: Input) -> Output:
             logger.debug("Slides remaining: {}".format(len(slides)))
         best_max = -1
         best_idx = -1
-        for i, s in enumerate(slides[:1000]):
+        for i in range(min(1000, len(slides))):
+            s = slides[i]
             cur_score = score_transition(cur_slide, s)
             if cur_score > best_max:
                 best_max = cur_score
