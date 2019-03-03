@@ -63,25 +63,25 @@ class Input(object):
 
     def _build_indexes(self):
         logger.debug("Start building indexes...")
-        self._id_to_pic = dict(enumerate(self.pictures))
-        self.type_to_pics = {PictureType.H: [], PictureType.V: []}  # type: Dict[PictureType, List[Picture]]
-        self.numtag_to_pics = defaultdict(lambda: [])  # type: Dict[int, List[Picture]]
+        self.id_to_pic = dict(enumerate(self.pictures))
+        self.type_to_pics = {PictureType.H: [], PictureType.V: []}  # type: Dict[PictureType, List[int]]
+        self.numtag_to_pics = defaultdict(lambda: [])  # type: Dict[int, List[int]]
 
         self.tag_to_idx = {}  # type: Dict[str, int]
         self.idx_to_tag = {}  # type: Dict[int, str]
 
-        self.tag_to_pics = defaultdict(lambda: set())  # type: Dict[int, Set[Picture]]
+        self.tag_to_pics = defaultdict(lambda: set())  # type: Dict[int, Set[int]]
         self.tag_to_count = defaultdict(lambda: 0)  # type: Dict[int, int]
 
         for i, p in enumerate(self.pictures):
-            self.type_to_pics[p.type_].append(p)
-            self.numtag_to_pics[len(p.tags_str)].append(p)
+            self.type_to_pics[p.type_].append(i)
+            self.numtag_to_pics[len(p.tags_str)].append(i)
 
             for t in p.tags_str:
                 idx = self.tag_to_idx.get(t, len(self.tag_to_idx))
                 self.idx_to_tag[idx] = t
                 self.tag_to_idx[t] = idx
-                self.tag_to_pics[idx].add(p)
+                self.tag_to_pics[idx].add(p.id_)
                 self.tag_to_count[idx] += 1
 
             p.tags_idx = set(map(lambda t: self.tag_to_idx[t], p.tags_str))
@@ -147,7 +147,7 @@ class Output(object):
         slideshow = []
         for id_ in range(N):
             tokens = map(int, next(lines).strip().split(" "))
-            pictures = [i._id_to_pic[idx] for idx in tokens]
+            pictures = [i.id_to_pic[idx] for idx in tokens]
             slideshow.append(Slide(pictures))
 
         return Output(slideshow)

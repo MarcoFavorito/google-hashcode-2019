@@ -10,9 +10,9 @@ to compute the number of pics:
     cat a_example.in | tail -n +2  | cut -d' ' -f1 | sort | uniq -c  # pic per type
     
 to compute the avg. number of tags by pic:
-
-    head -n 1 a_example.in  # total number of pic 
-    cat a_example.in | tail -n +2  | cut -d' ' -f1 | sort | uniq -c  # pic per type
+    
+    cat a_example.in | tail -n +2  | cut -d' ' -f2 | awk '{t+=$1}END{print t/NR}'
+    
 
 and grep per type to obtain the associated statistics: `grep H` and `grep V` after `tail`.    
     

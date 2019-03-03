@@ -7,13 +7,13 @@ from hashcode19.helpers import Input, Output, PictureType, Slide, score_transiti
 logger = logging.getLogger(__name__)
 
 
-def main(i: Input) -> Output:
+def main(inp: Input) -> Output:
     """Sort by number of tags, then trivially pack vertical pictures.
     Choose the best next slide in 1000 other slides."""
     slideshow = []
-    slides = [Slide([h]) for h in i.type_to_pics[PictureType.H]]
-    vp = i.type_to_pics[PictureType.V]
-    slides = slides + [Slide([vp[i], vp[i+1]]) for i in range(0, len(vp)//2, 2)]
+    slides = [Slide([inp.id_to_pic[h]]) for h in inp.type_to_pics[PictureType.H]]
+    vp = inp.type_to_pics[PictureType.V]
+    slides = slides + [Slide([inp.id_to_pic[vp[i]], inp.id_to_pic[vp[i+1]]]) for i in range(0, len(vp)//2, 2)]
 
     slides = sorted(slides, key=lambda x: len(x.tags), reverse=False)
 
