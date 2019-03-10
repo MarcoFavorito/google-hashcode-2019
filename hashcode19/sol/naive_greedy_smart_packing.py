@@ -14,8 +14,8 @@ def main(i: Input) -> Output:
     That is, do not pack before, but during the greedy search in the current window."""
     slideshow = []
 
-    horizontal_pics = i.type_to_pics[PictureType.H]
-    vertical_pics = i.type_to_pics[PictureType.V]
+    horizontal_pics = list(map(lambda x: i.id_to_pic[x], i.type_to_pics[PictureType.H]))
+    vertical_pics = list(map(lambda x: i.id_to_pic[x], i.type_to_pics[PictureType.V]))
 
     pictures = copy.deepcopy(i.pictures)
     random.shuffle(pictures)
