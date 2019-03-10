@@ -32,7 +32,6 @@ def main(inp: Input) -> Output:
     # TODO generalize by including vertical pictures.
     nodes = set(filter(lambda x: inp.id_to_pic[x].type_ == PictureType.H, inp.id_to_pic))
 
-
     # add a dummy node, "-1", that will be the start node. the distance between any node and the start node is 0.
     start = -1
     distance_function = lambda x, y: score_tag_transition(inp.id_to_pic[x].tags, inp.id_to_pic[y].tags) if x != start and y != start else 0

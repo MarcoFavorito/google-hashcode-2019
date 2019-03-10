@@ -1,20 +1,33 @@
 #!/usr/bin/env bash
 
-ALG=$1
+if [ "$#" -ne 1 ] && [ "$#" -ne 5 ]; then
+    echo "Illegal number of parameters.";
+    echo "Usage: $0 [ ALG | ALG_A ALG_B ALG_C ALG_D ALG_E ]";
+    exit 1;
+fi
 
-for input in data/*.in;
+if [ "$#" == 1 ]; then
+    ALGS=("$1" "$1" "$1" "$1" "$1");
+else
+    ALGS=("$1" "$2" "$3" "$4" "$5");
+fi
+
+count=0
+echo "$(date)" >  SUBMISSION
+echo "Algorithms used for the submission:" >> SUBMISSION
+for input in data/[a_,b_,c_,d_,e_]*.in;
 do
-    output_filename="out/$(echo $input | cut -d'/' -f 2 | cut -d'.' -f 1).out"
+    test_name=$(echo $input | cut -d'/' -f 2 | cut -d'.' -f 1)
+    echo "- $test_name: ${ALGS[$count]}" >&1 | tee -a SUBMISSION
+    output_filename="out/${test_name}.out"
     echo "Processing input $input, writing output in $output_filename"
-    python3 -m hashcode19 --alg $ALG < $input > $output_filename
+    python3 -m hashcode19 --alg ${ALGS[$count]} < $input > $output_filename
     if [[ $? -ne 0 ]]; then
         exit 1;
     fi
+    (( count++ ));
 
 done
-
-echo "$(date)" >  SUBMISSION
-echo "Algorithm used for the submission: ${ALG}" >> SUBMISSION
 
 echo "Zipping the solution..."
 ./scripts/zipper.sh
